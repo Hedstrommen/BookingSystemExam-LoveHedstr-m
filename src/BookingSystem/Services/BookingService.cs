@@ -97,7 +97,8 @@ public class BookingService(IBookingRepository repository)
             return BookingResult.Failure("The selected room does not exist.");
         }
 
-        if (booking.StartTime == booking.EndTime)
+        //Behövde ändra denna från "(booking.StartTime == booking.EndTime)" till "(booking.EndTime <= booking.StartTime)" då det kändes mer logisk för mig att när användaren skriver in sluttiden så får den inte vara "över" eller samma som starttiden. Tidigare kollade den bara om starttiden var samma som sluttiden.
+        if (booking.EndTime <= booking.StartTime)
         {
             return BookingResult.Failure("The start time must be earlier than the end time.");
         }
@@ -112,12 +113,24 @@ public class BookingService(IBookingRepository repository)
             return BookingResult.Failure($"{room.Name} has a maximum capacity of {room.Capacity}.");
         }
 
+        //Behövde ändra "booking.StartTime >= existing.StartTime" till "booking.StartTime < existing.EndTime och "booking.StartTime < existing.EndTime" till booking.EndTime > existing.StartTime"
+
+        //för att:
+        //Innan så var villkoret att det överlappar om ny starttid är större eller samma som existerande starttid OCH om ny starttid är mindre än existerande sluttid. Det kunde innebära att om det finns en befintlig bokning 10-12 och något försöker boka 9-11. Då kollas om 9 >= 10 -> false och om 9 < 12 -> true. Problemet är att koden hade && som krävde att båda måste vara sanna. Så om den första delen blev false så blev hela delen false (alltså att bokingen gick igenom).
+
+        //Ny kod:
+        //Den kollar om den nya starttiden är mindre än existerande sluttid och samtidigt om den nya sluttiden är större än existerande starttiden. Med andra ord: börjar ny bokning innan befintlig är slut OCH slutar den nya bokingen efter den befintliga börjat? Om båda blir ja så måste det ha blivit en krock någonstans. 
+        
+        //ny bokning 9-11, befintlig 10-12.
+        //Kollar först om 9 är mindre än 12 (börjar nya innan slutet på befintlig? 
+        //Sen kollar om 11 är större än 10 (slutar den nya efter befintlig börjar?). Vi hittar en krock mellan 10 och 11!
+       
         var hasOverlap = repository.GetAll().Any(existing =>
             !existing.IsCancelled &&
             existing.Date == booking.Date &&
             existing.RoomName.Equals(booking.RoomName, StringComparison.OrdinalIgnoreCase) &&
-            booking.StartTime >= existing.StartTime &&
-            booking.StartTime < existing.EndTime);
+            booking.StartTime < existing.EndTime &&
+            booking.EndTime > existing.StartTime);
 
         if (hasOverlap)
         {
