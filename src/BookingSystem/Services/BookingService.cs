@@ -82,7 +82,7 @@ public class BookingService(IBookingRepository repository)
     public BookingResult Cancel(int bookingId)
     {
         //Varibaledeklaration inför cancel
-        Booking bookingToCancel = null;
+        Booking? bookingToCancel = null;
         
         //Skapar lista med alla bookings
         var bookings = repository.GetAll();
