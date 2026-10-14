@@ -122,19 +122,6 @@ public class BookingConsole(BookingService service)
         }
     }
 
-    //Skapar egen metod som sorterar bookings. 
-    private static List<Booking> SortBookings(IReadOnlyList<Booking> bookingsToSort)
-    {
-        //Sorterar enligt kraven genom LINQ. Inte helt med på hur bakomliggandekod ser ut men det som sker är:
-        //Vi skapar en List som vi tilldelar värdet av en IReadOnlyList som vi skickade in i metoden. IReadOnlyList, innan tilldelning till sortedBookings, sorterar vi först genom datum (OrderBy + .Date) och sen starttid (ThenBy + .StartTime) i samband med att vi konverterar IRead.. till List.
-        List<Booking> sortedBookings = bookingsToSort
-            .OrderBy(booking => booking.Date)
-            .ThenBy(booking => booking.StartTime)
-            .ToList();
-
-        return sortedBookings;
-    }
-
     private static DateOnly ReadDate(string prompt)
     {
         while (true)
