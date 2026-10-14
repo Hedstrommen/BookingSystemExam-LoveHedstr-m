@@ -55,7 +55,25 @@ public class BookingConsole(BookingService service)
     {
         Console.Write("Customer name: ");
         var searchTerm = Console.ReadLine() ?? string.Empty;
-        ShowBookings(service.Search(searchTerm));
+
+        //skapar en ny lista med värden i som matchar inskrivna sökningen
+        var searchResults = service.Search(searchTerm);
+
+        //om listans antal med inskrivna sökning är 0 så skrivs felmeddelande ut. Annars fortsätter metoden
+        if (searchResults.Count == 0)
+        {
+            Console.WriteLine("\nNo search results were found, try again");
+            //För att avbryta metoden
+            return;
+        }
+
+        //Meddelande för om det finns matchningar på sökningen
+        else
+        {
+            Console.WriteLine("\nSearch results found: ");
+        }
+
+        ShowBookings(searchResults);
     }
 
     private void CreateBooking()
