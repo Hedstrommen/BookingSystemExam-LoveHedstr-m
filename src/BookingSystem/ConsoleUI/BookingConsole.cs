@@ -106,7 +106,11 @@ public class BookingConsole(BookingService service)
             return;
         }
 
-        foreach (var booking in bookings)
+        //För läsbarhet och min egen logik skapar en ny lista som är sorterad enligt tillskriven metod.
+        var sortedBookings = service.SortBookings(bookings);
+
+        //justerat så den utgår från min sorterade List istället.
+        foreach (var booking in sortedBookings)
         {
             Console.WriteLine();
             Console.WriteLine($"Booking {booking.Id}");
@@ -116,6 +120,19 @@ public class BookingConsole(BookingService service)
             Console.WriteLine($"Time: {booking.StartTime:HH\\:mm}-{booking.EndTime:HH\\:mm}");
             Console.WriteLine($"Participants: {booking.Participants}");
         }
+    }
+
+    //Skapar egen metod som sorterar bookings. 
+    private static List<Booking> SortBookings(IReadOnlyList<Booking> bookingsToSort)
+    {
+        //Sorterar enligt kraven genom LINQ. Inte helt med på hur bakomliggandekod ser ut men det som sker är:
+        //Vi skapar en List som vi tilldelar värdet av en IReadOnlyList som vi skickade in i metoden. IReadOnlyList, innan tilldelning till sortedBookings, sorterar vi först genom datum (OrderBy + .Date) och sen starttid (ThenBy + .StartTime) i samband med att vi konverterar IRead.. till List.
+        List<Booking> sortedBookings = bookingsToSort
+            .OrderBy(booking => booking.Date)
+            .ThenBy(booking => booking.StartTime)
+            .ToList();
+
+        return sortedBookings;
     }
 
     private static DateOnly ReadDate(string prompt)
