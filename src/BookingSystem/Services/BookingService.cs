@@ -81,7 +81,40 @@ public class BookingService(IBookingRepository repository)
 
     public BookingResult Cancel(int bookingId)
     {
-        throw new NotImplementedException();
+        //Varibaledeklaration inför cancel
+        Booking bookingToCancel = null;
+        
+        //Skapar lista med alla bookings
+        var bookings = repository.GetAll();
+
+        //Itererar igenom den och jämför om bookings ID som inskickats till metoden är samma som befintlig boknings ID så lägger vi till den i en ny variabel
+        foreach (var booking in bookings)
+        {
+            if (booking.Id == bookingId)
+            {
+                //Ger variabeln värdet av booking som hittats och avbryter iterationen
+                bookingToCancel = booking;
+                break; 
+            }
+        }
+        //Validering om bokningen är null efter genomsökning så fel och felmeddelande
+        if (bookingToCancel == null)
+            return BookingResult.Failure("There is no booking with that number");
+
+        //Validering om den redan är cancelled
+        if (bookingToCancel.IsCancelled == true)
+        {
+            return BookingResult.Failure("This booking is already cancelled.");
+        }
+
+        //Sätter värdet till true så den blir canceled
+        bookingToCancel.IsCancelled = true;
+
+        //sparar nya värdet om jag förstått det rätt
+        repository.Save();
+
+        //Skickar tillbaka enligt BookingResult "mallen" att det lyckades och meddelandet den ska skicka ut. 
+        return BookingResult.Success($"Booking {bookingId} was cancelled");
     }
 
 
