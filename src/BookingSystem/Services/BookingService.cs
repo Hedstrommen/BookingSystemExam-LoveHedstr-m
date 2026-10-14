@@ -15,8 +15,22 @@ public class BookingService(IBookingRepository repository)
 
     public IReadOnlyList<Booking> GetActiveBookings()
     {
-        // This method has not been completed.
-        return repository.GetAll();
+        //Skapar en enbart läsbar lista av modellen Booking vid namn currentBokkings som jag genom repositoryns metod GetAll hämtar alla booking.
+        IReadOnlyList<Booking> currentBookings = repository.GetAll();
+
+        //Skapar en ny lista som jag kan ändra med .Add
+        List<Booking> activeBookings = new List<Booking>();
+        
+        //Loopar igenom alla booking i currentBookings och kollar om IsCancelled propertyn INTE är cancelled (alltså om den är false). Om booking är false så lägger jag till den till min activeBookings.Lista. 
+        foreach (var booking in currentBookings)
+        {
+            if (!booking.IsCancelled)
+            {
+                activeBookings.Add(booking);
+            }
+        }
+        //skickar tillbaka listan. Medveten om att det är en List och inte en IReadOnly men jag gissar på att det inte bör vara några problem. 
+        return activeBookings;
     }
 
     public IReadOnlyList<Booking> Search(string searchTerm)
