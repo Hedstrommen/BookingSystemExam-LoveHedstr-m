@@ -86,9 +86,27 @@ public class BookingConsole(BookingService service)
         var startTime = ReadTime("Start time (HH:mm): ");
         var endTime = ReadTime("End time (HH:mm): ");
 
-        Console.Write("Participants: ");
-        var participants = int.Parse(Console.ReadLine() ?? string.Empty);
+        //För att kompilatorn ska fatta att vi kör igenom whileloppen nedan måste jag tilldela ett värde här. Ville egentligen inte det.
+        int participants = 0;
 
+        //While loop som håller oss kvar tills användaren skriver ett värde.
+        bool notValid = true;
+        while (notValid)
+        {
+            Console.Write("Participants: ");
+
+            //Bool för att kolla om input är siffra genom TryParse. Lyckas tryparse får vi true och värdet tilldelas participants. Annars false och felmeddelandet skrivs ut.
+            bool isValid = int.TryParse(Console.ReadLine(), out participants);
+
+            //För att komma ur loopen
+            if (isValid)
+                notValid = false;
+
+            //Felmeddelande om ej nummer
+            else
+                Console.WriteLine("Please enter a correct number, not in text");
+        }
+            
         var booking = new Booking
         {
             CustomerName = customerName,
