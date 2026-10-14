@@ -98,7 +98,8 @@ public class BookingConsole(BookingService service)
         Console.WriteLine(service.Cancel(bookingId).Message);
     }
 
-    private static void ShowBookings(IReadOnlyList<Booking> bookings)
+    //Behövde ta bort static för att kunna kalla och använda denna metod från Booking Console pga primary constructor parameter som används i BookingConsole.
+    private void ShowBookings(IReadOnlyList<Booking> bookings)
     {
         if (bookings.Count == 0)
         {

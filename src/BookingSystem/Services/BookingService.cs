@@ -37,7 +37,7 @@ public class BookingService(IBookingRepository repository)
     }
 
     //Skapar egen metod som sorterar bookings. 
-    private static List<Booking> SortBookings(List<Booking> bookingsToSort)
+    public List<Booking> SortBookings(IReadOnlyList<Booking> bookingsToSort)
     {
         //Sorterar enligt kraven genom LINQ. Inte helt med på hur bakomliggandekod ser ut men det som sker är:
         //Vi skapar en List som vi tilldelar värdet av listan bookingsToSort som vi skickade in i metoden. Genom LINQ skriver vi en ny lista så vi sorterar under den ny skrivningen, därför behöver vi en ToList i slutet annars hade ingenting hänt. Jag använder LINQ för att den inte påverkar originallistan utan skapar en ny som visar utåt. 
