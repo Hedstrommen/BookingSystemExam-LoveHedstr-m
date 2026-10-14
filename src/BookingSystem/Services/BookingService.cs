@@ -52,10 +52,14 @@ public class BookingService(IBookingRepository repository)
 
     public IReadOnlyList<Booking> Search(string searchTerm)
     {
+        //gör sökningen case insensitive genom ToLowermetoden.
+        string searchTermLower = searchTerm.ToLower();
+        
+        //.Where kollar om den INTE är cancelled samt Contains kollar delar av namn i sökningen. Jag lägger till To.Lower till customerName för att göra den case insensitive som söktermen.
         return repository.GetAll()
             .Where(booking =>
                 !booking.IsCancelled &&
-                booking.CustomerName.Contains(searchTerm))
+                booking.CustomerName.ToLower().Contains(searchTermLower))
             .ToList();
     }
 

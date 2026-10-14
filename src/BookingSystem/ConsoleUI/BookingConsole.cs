@@ -108,10 +108,10 @@ public class BookingConsole(BookingService service)
         }
 
         //För läsbarhet och min egen logik skapar en ny lista som är sorterad enligt tillskriven metod.
-        var sortedBookings = service.SortBookings(bookings);
+        var sortedActiveBookings = service.SortBookings(bookings);
 
         //justerat så den utgår från min sorterade List istället.
-        foreach (var booking in sortedBookings)
+        foreach (var booking in sortedActiveBookings)
         {
             Console.WriteLine();
             Console.WriteLine($"Booking {booking.Id}");
