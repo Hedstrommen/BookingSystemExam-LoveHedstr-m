@@ -70,7 +70,7 @@ public class BookingConsole(BookingService service)
         //Meddelande för om det finns matchningar på sökningen
         else
         {
-            Console.WriteLine("\nSearch results found: ");
+            Console.WriteLine($"\nSearch '{searchTerm}' gave the following results: ");
         }
 
         ShowBookings(searchResults);
